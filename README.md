@@ -1,10 +1,14 @@
 # Autoregressive Model for Prediction of Flow Around a Cylinder
 ## Problem Description
 
+<div align="justify">
+<div align="justify" style="text-align-last: left;">
+</div>
 The flow around a circular cylinder is a canonical benchmark problem in computational fluid dynamics (CFD), characterized by complex unsteady phenomena such as vortex shedding and wake formation. Accurately resolving these dynamics typically requires high-fidelity numerical simulations of the Navier–Stokes equations, which are computationally expensive, especially for long time horizons. In this work, we investigate a data-driven surrogate modeling approach for predicting the temporal evolution of the flow field using a convolutional neural network (CNN) based on the U-Net architecture. Despite recent advances in data-driven modeling, achieving accurate and stable long-term predictions across varying flow regimes and geometries remains a significant challenge.
+</div>
 
 <img width="700" height="300" alt="image" src="https://github.com/user-attachments/assets/1f203cd2-83df-42e3-8db6-744465508aa2" />
-
+<div align="justify">
 The U-Net is a convolutional neural network architecture originally developed for biomedical image segmentation, but it has proven exceptionally effective for fluid dynamics due to its ability to capture both local details and global context. Its main parts are: 
 * Encoder-Decoder Structure: The encoder progressively downsamples the input, increasing the receptive field while reducing spatial resolution. Early encoder layers capture fine local features such as cylinder boundaries and small-scale velocity gradients, while deeper layers encode more abstract, global representations of the flow. The bottleneck, located at the middle of the “U”, contains the most compressed representation of the input, summarizing the overall flow structure such as wake formation and large-scale patterns. The decoder then progressively upsamples this representation to reconstruct the output field.
 * Skip connections: The skip connections concatenate encoder and decoder feature maps at the same resolution level. Without skip connections the decoder only has the bottleneck to work from - spatial detail about the cylinder boundary, boundary layer, etc. is lost. With skip connections that detail is preserved and passed directly.
@@ -25,7 +29,7 @@ Here, the mask represents the spatial geometry of the domain, where a value of 0
 The dataset is divided into three subsets based on the varying physical parameters: boundary conditions ("bc"), geometric properties ("geo"), and fluid properties ("prop"). Each subset differs in both the number of samples and the type of variation introduced. A summary of the dataset composition is provided in the table below. The input data are provided as .json files containing simulation parameters, while the output data are stored as .npy files representing velocity fields on a 64×64 grid across multiple timesteps.
 
 | Subset | Description | Original Samples | Selected Samples | Timesteps per Sample
-| :--- | :--- | :--- | :--- | :--- |
+| :---: | :---: | :---: | :---: | :---: |
 | **bc** | Inlet Velocity Variations | 50 | 20 | 620
 | **geo** | Cylinder Topology & Radius | 20 | 19 | 2000
 | **prop** | Density & Viscosity Variations | 116 | 73 | 1000
@@ -52,7 +56,7 @@ As stated previously, two separate models were developed for different predictio
 In the table below the mean and max relative errors across all testing samples are depicted, showing excellent generalization ability of the model to unseen data.
 
 | Single-Timestep Prediction | U | V 
-| :--- | :--- | :--- |
+| :---: | :---: | :---: |
 | **Mean Relative Error (%)** | 0.34 | 0.38 
 | **Max Relative Error (%)** | 1.14 | 1.05 
 
@@ -60,7 +64,7 @@ To contextualize the model's performance, predictions are compared against an id
 a lower bound for meaningful prediction — any useful model should outperform it. The identity baseline error reflects how much the flow actually changes per timestep. For steady flows (Re < 47), consecutive frames are nearly identical, making the identity an almost perfect predictor. For flows in the active vortex shedding regime (Re > 100), the flow evolves significantly between timesteps, and the identity baseline becomes less accurate. The table below compares the mean relative error of the model against the identity baseline across different Reynolds number ranges:
 
 | Reynolds Range | Model Error (%) | Identity Error (%) | Improvement (%)
-| :--- | :--- | :--- | :---|
+| :---: | :---: | :---: | :---:|
 | 0-50 | 0.11 | 0.0 | -0.11 
 | 50-100 | 0.12 | 0.0 | -0.12
 | 100-150 | 0.27 | 0.23 | -0.04
@@ -86,14 +90,14 @@ Once again, the training and validation loss curves confirm that the model learn
 In the table below the mean and max relative errors across all testing samples are depicted, showing once again excellent generalization ability of the model to unseen data. Error is higher than the single-timestep case, as expected.
 
 | Single-Timestep Prediction | U | V 
-| :--- | :--- | :--- |
+| :---: | :---: | :---: |
 | **Mean Relative Error (%)** | 0.74 | 0.78 
 | **Max Relative Error (%)** | 2.69 | 2.56 
 
 The five-step-ahead model achieves a mean relative error of 0.74% for both velocity components, with a maximum relative error of 2.69% and 2.56% for the x- and y-components respectively. As expected, these values are higher than the one-step-ahead model (0.37% mean relative error), reflecting the increased difficulty of predicting further into the future. The identity baseline comparison reveals a significantly clearer improvement over the baseline compared to the one-step model. In the active vortex shedding regime (Re > 200), the model reduces the error by up to 2.54% relative to the identity baseline, which itself has errors of 2.3-3.3% over five timesteps. This represents a 3-4x improvement over the identity prediction, confirming that the network genuinely learns the flow dynamics rather than simply persisting the current state. For low Reynolds number flows (Re < 100) the model again performs worse than the identity baseline, consistent with the one-step model findings - steady flows require no prediction and the network introduces unnecessary perturbations. 
 
 | Reynolds Range | Model Error (%) | Identity Error (%) | Improvement (%)
-| :--- | :--- | :--- | :---|
+| :---: | :---: | :---: | :---: |
 | 0-50 | 0.19 | 0.0 | -0.19 
 | 50-100 | 0.18 | 0.001 | -0.18
 | 100-150 | 0.64 | 1.15 | +0.51
@@ -131,3 +135,4 @@ Shibuya, E., & Hotta, K. (2021). Cell image segmentation by using feedback and c
 
 Kingma, D. P., & Ba, J. (2015). Adam: A method for stochastic optimization. Proceedings of the 3rd International Conference on Learning Representations (ICLR 2015). https://arxiv.org/abs/1412.6980.  
 
+</div>
